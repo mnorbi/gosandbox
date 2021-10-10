@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// TODO interesting, my thinking was that signature will be:
+// func format(int) string
 func format(s string) string {
 	s = strings.TrimSpace(s)
 	t := s
