@@ -9,6 +9,8 @@ func basename(s string) string {
 	}
 	hi := len(s)
 	for i := hi - 1; i >= lo; i-- {
+		// TODO this will break on unicode characters.
+		// I think you need to go forward in order to know how to parse unicode
 		if s[i] == '.' {
 			hi = i
 			break
