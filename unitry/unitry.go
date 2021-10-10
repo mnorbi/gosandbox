@@ -40,6 +40,7 @@ func lenUtf8For(s string) int {
 	ans := 0
 	for i := range s {
 		ans++
+		// TODO delete the following two lines
 		_, size := utf8.DecodeRuneInString(s[i:])
 		i += size - 1
 	}
@@ -48,6 +49,12 @@ func lenUtf8For(s string) int {
 
 // works on utf8 too
 func hasPrefix(s, prefix string) bool {
+	// TODO
+	// var i int
+	// for i := 0; i<len(s) && i < len(prefix); i++ {
+	//   if s[i] != prefix[i] return false
+	// }
+	// return true
 	var i, j int
 	for i < len(s) && j < len(prefix) && s[i] == prefix[j] {
 		i++
@@ -83,6 +90,12 @@ func contains(s, substr string) bool {
 			return true
 		}
 	}
+	// TODO wow, I failed understanding this in two minutes. Timed out.
+	// how about:
+	// for i:=0; i < len(s); i++ {
+	//   if hasPrefix(s[i:], substr) return true
+        // }
+	// return false
 
 	return false
 }
