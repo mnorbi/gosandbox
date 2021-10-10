@@ -3,6 +3,11 @@ package basename
 import "testing"
 
 func TestBasename(t *testing.T) {
+	// TODO Just a pro tip: start using testify/require or testify/assert
+	// import "github.com/stretchr/testify/require"
+	// require.Equal(t, "a", basename("/a.")
+	// require.Equal(t, "", basename("")
+	// ...
 	e := []struct {
 		in       string
 		expected string
