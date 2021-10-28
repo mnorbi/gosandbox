@@ -1,20 +1,23 @@
 package basename
 
+import "unicode/utf8"
+
 func basename(s string) string {
-	lo := 0
-	for i := range s {
-		if s[i] == '/' {
+	lo, hi := 0, len(s)
+	for i := 0; i < hi; {
+		r, size := utf8.DecodeRuneInString(s[i:])
+		if r == '/' {
 			lo = i + 1
 		}
+		i += size
 	}
-	hi := len(s)
-	for i := hi - 1; i >= lo; i-- {
-		// TODO this will break on unicode characters.
-		// I think you need to go forward in order to know how to parse unicode
-		if s[i] == '.' {
-			hi = i
+	for i := hi; i > lo; {
+		r, size := utf8.DecodeLastRuneInString(s[lo:i])
+		if r == '.' {
+			hi = i - 1
 			break
 		}
+		i -= size
 	}
 	return s[lo:hi]
 }

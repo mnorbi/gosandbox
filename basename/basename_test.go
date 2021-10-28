@@ -1,41 +1,42 @@
 package basename
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/require"
+)
 
 func TestBasename(t *testing.T) {
-	// TODO Just a pro tip: start using testify/require or testify/assert
-	// import "github.com/stretchr/testify/require"
-	// require.Equal(t, "a", basename("/a.")
-	// require.Equal(t, "", basename("")
-	// ...
-	e := []struct {
-		in       string
+	var tests = []struct {
 		expected string
+		input    string
 	}{
-		{"/a.", "a"},
+		{"a", "/a."},
 		{"", ""},
-		{".", ""},
-		{"a.", "a"},
-		{"a.b", "a"},
-		{"a.b.c", "a.b"},
-		{"./", ""},
-		{"./a", "a"},
-		{"./a.b", "a"},
-		{".a", ""},
-		{"/", ""},
-		{"/.", ""},
-		{"/.a", ""},
-		{"//", ""},
-		{"/a", "a"},
-		{"/ab", "ab"},
-		{"/ab/", ""},
-		{"/a.b", "a"},
-		{"/a/b.c", "b"},
-		{"/a/b.c/", ""},
+		{"", "."},
+		{"a", "a."},
+		{"a", "a.b"},
+		{"a.b", "a.b.c"},
+		{"", "./"},
+		{"a", "./a"},
+		{"a", "./a.bb"},
+		{"", ".a"},
+		{"", "/"},
+		{"", "/."},
+		{"", "/.a"},
+		{"", "//"},
+		{"a", "/a"},
+		{"ab", "/ab"},
+		{"", "/ab/"},
+		{"a", "/a.b"},
+		{"b", "/a/b.c"},
+		{"", "/a/b.c/"},
+		{"", "/a/b.c/"},
+		{"a", "/a/b.c/a.Ω"},
+		{"Ωa", "/aΩa/bΩa.Ωac/Ωa.aΩbΩc"},
 	}
-	for _, e := range e {
-		if actual := basename(e.in); e.expected != actual {
-			t.Errorf("basename(%s) expected: %s, actual:%s", e.in, e.expected, actual)
-		}
+	for _, testCase := range tests {
+		actual := basename(testCase.input)
+		require.Equal(t, testCase.expected, actual, "basename(%s) expected: %s, actual:%s", testCase.input, testCase.expected, actual)
 	}
 }

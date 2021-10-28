@@ -10,10 +10,13 @@ func formatNumber(v int) string {
 		return "0"
 	}
 	var buf bytes.Buffer
-	for i, j := v, 0; i != 0; {
+	for i, j := v, 0; ; {
 		buf.WriteRune(rune('0' + abs(i%10)))
 		i = i / 10
 		j++
+		if i == 0 {
+			break
+		}
 		if i != 0 && j%3 == 0 {
 			buf.WriteRune(',')
 		}
