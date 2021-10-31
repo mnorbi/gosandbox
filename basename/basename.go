@@ -3,6 +3,8 @@ package basename
 import "unicode/utf8"
 
 func basename(s string) string {
+	//TODO: use range
+	//TODO: investigate strings.LastIndex
 	lo, hi := 0, len(s)
 	for i := 0; i < hi; {
 		r, size := utf8.DecodeRuneInString(s[i:])
