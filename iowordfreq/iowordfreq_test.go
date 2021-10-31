@@ -3,25 +3,10 @@ package iowordfreq
 import (
 	"fmt"
 	"testing"
-
-	"github.com/mnorbi/gosandbox/wordfreq"
 )
 
-type IoWordFreq struct {
-	wordfreq.WordFreq
-}
-
-func NewIoWordFreq() *IoWordFreq {
-	return &IoWordFreq{*wordfreq.NewWordFreq()}
-}
-
-func (wf IoWordFreq) Write(p []byte) (n int, err error) {
-	wf.AddWords(string(p))
-	return len(p), nil
-}
-
 func ExampleIoWordFreq() {
-	iowf := *NewIoWordFreq()
+	iowf := IoWordFreq{}
 	iowf.AddWords("hello friend")
 	fmt.Println(iowf.GetWordCount("hello"))
 
@@ -37,7 +22,7 @@ func ExampleIoWordFreq() {
 }
 
 func TestMapRelocation(t *testing.T) {
-	iowf := *NewIoWordFreq()
+	iowf := IoWordFreq{}
 	fmt.Fprintln(&iowf, "one")
 	if iowf.GetWordCount("one") != 1 {
 		t.Errorf("one problem")
