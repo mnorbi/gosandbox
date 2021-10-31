@@ -3,7 +3,7 @@ package wordfreq
 import "fmt"
 
 func ExampleWordFreq_GetWordCount() {
-	wf := NewWordFreq()
+	wf := WordFreq{}
 	fmt.Println("zero:", wf.GetWordCount("zero"))
 
 	wf.AddWords("Is this a test or just an example?")
