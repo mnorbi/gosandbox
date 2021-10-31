@@ -43,7 +43,7 @@ const urlBase = "https://www.googleapis.com/books/v1/volumes/"
 // vrPQAwAAQBAJ EVmminvaWDQC 5oSU5PepogEC
 
 type VolumeInfo struct {
-	Title      string
+	Tile       string `json:"title"`
 	Authors    []string
 	Categories []string
 }
@@ -65,21 +65,26 @@ func main() {
 	}
 
 	res, err = http.Get(urlBase + id)
-	if err == nil && res.StatusCode == http.StatusOK {
-		body, err = ioutil.ReadAll(res.Body)
-		if err == nil {
-			b := Book{}
-			err = json.Unmarshal(body, &b)
-			if err == nil {
-				log.Println(b)
-			}
-		}
-	}
-
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
-	if res != nil && res.StatusCode != http.StatusOK {
-		log.Println(res)
+	if res.StatusCode != http.StatusOK {
+		log.Println("Status eror: ", res)
+		return
 	}
+
+	body, err = ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	b := Book{}
+	err = json.Unmarshal(body, &b)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	log.Println(b)
 }
