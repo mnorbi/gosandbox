@@ -12,20 +12,20 @@ func playground() {
 	fmt.Println(s)
 }
 
-func lenUtf8(s string) int {
+func lenUtf8(s string) (length int) {
 	// One unicode character can be multiple bytes.
 	// Loop over the string with an integer and advance the int with the size of the current rune.
 	// $ go doc utf8.DecodeRuneInString
 	// for range
 	// for i
-	ans := 0
+	// ans := 0
 	for i := 0; i < len(s); {
-		ans++
+		length++
 		_, size := utf8.DecodeRuneInString(s[i:])
 		i += size
 	}
 
-	return ans
+	return
 }
 
 func lenUtf8Std(s string) int {
@@ -34,17 +34,13 @@ func lenUtf8Std(s string) int {
 	return utf8.RuneCountInString(s)
 }
 
-func lenUtf8For(s string) int {
+func lenUtf8For(s string) (length int) {
 	// Use a range based for loop
 	// https://golang.org/ref/spec#For_statements
-	ans := 0
-	for i := range s {
-		ans++
-		// TODO delete the following two lines
-		_, size := utf8.DecodeRuneInString(s[i:])
-		i += size - 1
+	for range s {
+		length++
 	}
-	return ans
+	return
 }
 
 // works on utf8 too
@@ -65,6 +61,18 @@ func hasPrefix(s, prefix string) bool {
 }
 
 func contains(s, substr string) bool {
+	if substr == "" {
+		return true
+	}
+	for i := range s {
+		if hasPrefix(s[i:], substr) {
+			return true
+		}
+	}
+	return false
+}
+
+func contains2(s, substr string) bool {
 	var n, m int = len(s), len(substr)
 	if m == 0 {
 		return true
@@ -94,7 +102,7 @@ func contains(s, substr string) bool {
 	// how about:
 	// for i:=0; i < len(s); i++ {
 	//   if hasPrefix(s[i:], substr) return true
-        // }
+	// }
 	// return false
 
 	return false
@@ -114,6 +122,23 @@ func intsToString(values []int) string {
 }
 
 func intsToStringFast(values []int) string {
+	// go doc strings
+	// go doc bytes
+	// go doc bytes.Buffer
+	// go doc fmt.Fprintf
+	var buf bytes.Buffer
+	fmt.Fprint(&buf, "[")
+	for i, v := range values {
+		if i > 0 {
+			buf.WriteString(", ")
+		}
+		fmt.Fprint(&buf, v)
+	}
+	fmt.Fprint(&buf, "]")
+	return buf.String()
+}
+
+func intsToStringFast2(values []int) string {
 	// go doc strings
 	// go doc bytes
 	// go doc bytes.Buffer
