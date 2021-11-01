@@ -39,7 +39,7 @@ func main() {
 	urls := readUrls(fileName)
 	queue := make(chan struct{})
 	for _, url := range urls {
-		go run((&Fetcher{url, nil}).fetch, queue)
+		go run((&Fetcher{url}).fetch, queue)
 	}
 
 	for range urls {
@@ -59,8 +59,7 @@ func run(fn func(), queue chan struct{}) {
 }
 
 type Fetcher struct {
-	Url     string
-	Content []byte
+	Url string
 }
 
 func (f *Fetcher) fetch() {
@@ -73,12 +72,10 @@ func (f *Fetcher) fetch() {
 		log.Println("Status eror: ", res)
 		return
 	}
-	//TODO refactor iowf
 	nbytes, err := io.Copy(&iowf, res.Body)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	//TODO refactor start
 	fmt.Printf("%.2fs  %7d  %s\n", time.Since(start).Seconds(), nbytes, f.Url)
 }
