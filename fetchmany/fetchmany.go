@@ -29,8 +29,10 @@ func readUrls(fileName string) (urls []string) {
 }
 
 var start = time.Now()
-var iowf = iowordfreq.IoWordFreq{}
-var iowfMutex = sync.Mutex{}
+var iowf struct {
+	sync.Mutex
+	iowordfreq.IoWordFreq
+}
 var wordsToKnow = strings.Split("html prize body script css", " ")
 
 func main() {
@@ -39,13 +41,13 @@ func main() {
 		fileName = os.Args[1]
 	}
 	urls := readUrls(fileName)
-	queue := make(chan struct{})
+	done := make(chan struct{})
 	for _, url := range urls {
-		go run((&Fetcher{url}).fetch, queue)
+		go run((&Fetcher{url}).fetch, done)
 	}
 
 	for range urls {
-		<-queue
+		<-done
 	}
 
 	fmt.Printf("%.2fs Total\n", time.Since(start).Seconds())
@@ -75,9 +77,9 @@ func (f *Fetcher) fetch() {
 		return
 	}
 
-	iowfMutex.Lock()
+	iowf.Lock()
 	nbytes, err := io.Copy(&iowf, res.Body)
-	iowfMutex.Unlock()
+	iowf.Unlock()
 
 	if err != nil {
 		log.Fatal(err)
