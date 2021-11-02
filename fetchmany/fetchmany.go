@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/mnorbi/gosandbox/iowordfreq"
@@ -29,6 +30,7 @@ func readUrls(fileName string) (urls []string) {
 
 var start = time.Now()
 var iowf = iowordfreq.IoWordFreq{}
+var iowfMutex = sync.Mutex{}
 var wordsToKnow = strings.Split("html prize body script css", " ")
 
 func main() {
@@ -72,7 +74,11 @@ func (f *Fetcher) fetch() {
 		log.Println("Status eror: ", res)
 		return
 	}
+
+	iowfMutex.Lock()
 	nbytes, err := io.Copy(&iowf, res.Body)
+	iowfMutex.Unlock()
+
 	if err != nil {
 		log.Fatal(err)
 		return
